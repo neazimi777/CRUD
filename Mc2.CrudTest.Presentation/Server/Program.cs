@@ -1,3 +1,5 @@
+using Mc2.CrudTest.DomainService;
+using Mc2.CrudTest.Persistence;
 using Microsoft.AspNetCore.ResponseCompression;
 
 namespace Mc2.CrudTest.Presentation
@@ -10,11 +12,11 @@ namespace Mc2.CrudTest.Presentation
 
             // Add services to the container.
 
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddRazorPages();
-
+            // builder.Services.AddControllersWithViews();
+            // builder.Services.AddRazorPages();
+            builder.Services.AddSwaggerGen();
             var app = builder.Build();
-
+            ConfigureServices(builder);
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -41,5 +43,12 @@ namespace Mc2.CrudTest.Presentation
 
             app.Run();
         }
+
+        private static void ConfigureServices(WebApplicationBuilder builder)
+        {
+            builder.Services.ConfigurePersistenceServices(builder.Configuration);
+            builder.Services.ConfigureDomainServiceServices();
+        }
+
     }
 }
