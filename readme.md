@@ -1,5 +1,7 @@
 # CRUD Code Test 
 
+Because I didn't fork at the beginning, I couldn't copy my commits to this new repository. However, I have added you as a collaborator, so now you can see the repository 'CRUD-test' in the neazimi777 account with all the changes.
+
 Please read each note very carefully!
 Feel free to add/change project structure to a clean architecture to your view.
 and if you are not able to work on FrontEnd project, you can add a Swagger UI
