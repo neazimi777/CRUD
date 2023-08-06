@@ -11,7 +11,7 @@ namespace Mc2.CrudTest.DomainService.Customer.Handlers.Queries
     {
         private readonly ICustomerRepository _customerRepository;
         private readonly IMapper _mapper;
-        public GetCustomerRequestHandler(ICustomerEventRepository customerEventRepository,
+        public GetCustomerRequestHandler(
             ICustomerRepository customerRepository
             , IMapper mapper)
         {

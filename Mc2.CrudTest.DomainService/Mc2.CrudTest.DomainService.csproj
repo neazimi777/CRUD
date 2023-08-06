@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Mc2.CrudTest.Dto\Mc2.CrudTest.Dto.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Customer\Handlers\Queries\" />
+  </ItemGroup>
+
 </Project>

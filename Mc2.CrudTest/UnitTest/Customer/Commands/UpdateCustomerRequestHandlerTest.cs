@@ -9,7 +9,7 @@ using MediatR;
 using Moq;
 using Shouldly;
 
-namespace Mc2.CrudTest.UnitTest.Customer.Commands
+namespace Mc2.CrudTest.Test.UnitTest.Customer.Commands
 {
     public class UpdateCustomerRequestHandlerTest
     {
@@ -17,17 +17,17 @@ namespace Mc2.CrudTest.UnitTest.Customer.Commands
         private readonly UpdateCustomerDto _CustomerDto;
         private readonly Mock<ICustomerRepository> _mockCustomer;
         private readonly UpdateCustomerRequestHandler _handler;
-        private readonly IMediator _mediator;
-        public UpdateCustomerRequestHandlerTest(IMediator mediator)
+        private readonly Mock<IMediator> _mediator;
+        public UpdateCustomerRequestHandlerTest()
         {
             var mapperConfig = new MapperConfiguration(c =>
             {
                 c.AddProfile<MappingProfile>();
             });
-            _mediator = mediator;
+            _mediator = new Mock<IMediator>();
             _mapper = mapperConfig.CreateMapper();
             _mockCustomer = MockCustomerRepository.CustomerRepository();
-            _handler = new UpdateCustomerRequestHandler(_mockCustomer.Object, _mapper, _mediator);
+            _handler = new UpdateCustomerRequestHandler(_mockCustomer.Object, _mapper, _mediator.Object);
 
             _CustomerDto = new UpdateCustomerDto
             {
@@ -35,9 +35,8 @@ namespace Mc2.CrudTest.UnitTest.Customer.Commands
                 FirstName = "AliReza",
                 LastName = "esfandiyar",
                 Email = "Ali@gmail.com",
-                PhoneNumber = "09125698189",
-                BankAccountNumber = "12345678",
-                DateOfBirth = DateOnly.Parse("1998/01/02")
+                PhoneNumber = "+989124446710",
+                DateOfBirth = "1998/01/02"
             };
         }
 
@@ -58,7 +57,7 @@ namespace Mc2.CrudTest.UnitTest.Customer.Commands
         [Fact]
         public async Task InValid_Customer_Edited()
         {
-            _CustomerDto.BankAccountNumber = "1";
+            _CustomerDto.Email = "1";
 
             var result = await _handler.Handle(new DomainService.Customer.Requests.Commands.UpdateCustomerRequest(_CustomerDto), CancellationToken.None);
 

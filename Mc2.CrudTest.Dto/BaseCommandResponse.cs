@@ -4,5 +4,6 @@
     {
         public bool Success { get; set; } = true;
         public string Message { get; set; } = "Modification is successful";
+        public List<string>? Errors { get; set; } = null!;
     }
 }

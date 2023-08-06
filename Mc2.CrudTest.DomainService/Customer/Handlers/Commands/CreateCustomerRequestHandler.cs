@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
-using FluentValidation;
-using Mc2.CrudTest.Domain.Exceptions;
 using Mc2.CrudTest.Domain.Repositories;
 using Mc2.CrudTest.DomainService.Customer.Requests.Commands;
 using Mc2.CrudTest.DomainService.Extention;
 using Mc2.CrudTest.DomainService.Validations;
 using Mc2.CrudTest.Dto;
-using Mc2.CrudTest.Dto.Customer;
 using Mc2.CrudTest.Dto.EventCustomer;
 using MediatR;
 
@@ -38,21 +35,24 @@ namespace Mc2.CrudTest.DomainService.Customer.Handlers.Commands
                 {
                     response.Success = false;
                     response.Message = "Creation Failed";
+                    response.Errors = validationResult.Errors.Select(q => q.ErrorMessage).ToList();
+                    throw new Domain.Exceptions.ValidationException("Validation error");
                 }
 
                 var customer = _mapper.Map<Domain.Customer>(request.createCustomerDto);
-                customer.CheckDuplicate.ToHash(request.createCustomerDto.FirstName, request.createCustomerDto.LastName, request.createCustomerDto.DateOfBirth);
+                customer.DateOfBirth = DateTime.Parse(request.createCustomerDto.DateOfBirth);
+                customer.CheckDuplicate = StringExtension.ToHash(request.createCustomerDto.FirstName, request.createCustomerDto.LastName, request.createCustomerDto.DateOfBirth);
                 customer.CreateTime = DateTime.Now;
                 customer.IsActive = true;
 
-                _customerRepository.Update(customer);
+                await _customerRepository.Add(customer);
                 await _customerRepository.SaveAsync();
 
                 var customerEvent = new CreateCustomerEventDto
                 {
                     FirstName = customer.FirstName,
                     LastName = customer.LastName,
-                    DateOfBirth = customer.DateOfBirth,
+                    DateOfBirth = customer.DateOfBirth.ToString(),
                     Email = customer.Email,
                     PhoneNumber = customer.PhoneNumber,
                     BankAccountNumber = customer.BankAccountNumber,

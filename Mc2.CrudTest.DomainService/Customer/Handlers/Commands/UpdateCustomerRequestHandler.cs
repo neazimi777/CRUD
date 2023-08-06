@@ -7,8 +7,7 @@ using Mc2.CrudTest.DomainService.Validations;
 using Mc2.CrudTest.Dto;
 using Mc2.CrudTest.Dto.EventCustomer;
 using MediatR;
-using XAct;
-using XAct.Messages;
+
 
 namespace Mc2.CrudTest.DomainService.Customer.Handlers.Commands
 {
@@ -38,6 +37,8 @@ namespace Mc2.CrudTest.DomainService.Customer.Handlers.Commands
                 {
                     response.Success = false;
                     response.Message = "Edit Failed";
+                    response.Errors = validationResult.Errors.Select(q => q.ErrorMessage).ToList();
+                    throw new Domain.Exceptions.ValidationException("Validation error");
                 }
 
                 var specificCustomer = await _customerRepository.Get(request.updateCustomerDto.Id);
@@ -47,7 +48,8 @@ namespace Mc2.CrudTest.DomainService.Customer.Handlers.Commands
 
 
                 var customer = _mapper.Map(request.updateCustomerDto, specificCustomer);
-                customer.CheckDuplicate.ToHash(request.updateCustomerDto.FirstName, request.updateCustomerDto.LastName, request.updateCustomerDto.DateOfBirth);
+                customer.DateOfBirth = DateTime.Parse(request.updateCustomerDto.DateOfBirth);
+                customer.CheckDuplicate = StringExtension.ToHash(request.updateCustomerDto.FirstName, request.updateCustomerDto.LastName, request.updateCustomerDto.DateOfBirth);
                 customer.LastModificationTime = DateTime.Now;
 
                 _customerRepository.Update(customer);
@@ -57,7 +59,7 @@ namespace Mc2.CrudTest.DomainService.Customer.Handlers.Commands
                 {
                     FirstName = customer.FirstName,
                     LastName = customer.LastName,
-                    DateOfBirth = customer.DateOfBirth,
+                    DateOfBirth = customer.DateOfBirth.ToString(),
                     Email = customer.Email,
                     PhoneNumber = customer.PhoneNumber,
                     BankAccountNumber = customer.BankAccountNumber,

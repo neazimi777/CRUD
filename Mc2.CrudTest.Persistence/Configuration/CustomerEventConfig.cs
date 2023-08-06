@@ -9,7 +9,7 @@ namespace Mc2.CrudTest.Persistence.Configuration
         public void Configure(EntityTypeBuilder<CustomerEvent> builder)
         {
             builder.ToTable("CustomerEvent", "dbo");
-            builder.Property(k => k.Id).ValueGeneratedOnAdd();
+            builder.HasKey(k => k.Id);
             builder.Property(p => p.FirstName).HasColumnType("NVARCHAR").HasMaxLength(50).IsRequired();
             builder.Property(p => p.LastName).HasColumnType("NVARCHAR").HasMaxLength(50).IsRequired();
             builder.Property(p => p.DateOfBirth).HasColumnType("DATE").IsRequired();

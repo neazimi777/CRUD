@@ -1,5 +1,6 @@
 ﻿using Mc2.CrudTest.Domain;
 using Mc2.CrudTest.Domain.Repositories;
+using Microsoft.EntityFrameworkCore.Storage;
 using Moq;
 using XAct.Messages;
 
@@ -17,9 +18,9 @@ namespace Mc2.CrudTest.UnitTest.Mocks
                     FirstName= "Ali",
                     LastName="esfandiyar",
                     Email="Ali@gmail.com",
-                    PhoneNumber="09125698189",
+                    PhoneNumber="+989123456710",
                     BankAccountNumber="12345678",
-                    DateOfBirth=DateOnly.Parse("1998/01/02"),
+                    DateOfBirth=DateTime.Parse("1998/01/02"),
                     IsActive=true,
                     CreateTime= DateTime.Now,
                     LastModificationTime=null,
@@ -32,9 +33,9 @@ namespace Mc2.CrudTest.UnitTest.Mocks
                     FirstName= "maryam",
                     LastName="Ghasemi",
                     Email="maryam@gmail.com",
-                    PhoneNumber="09125691289",
+                    PhoneNumber="+989123456123",
                     BankAccountNumber="123456444",
-                    DateOfBirth=DateOnly.Parse("1988/01/02"),
+                    DateOfBirth=DateTime.Parse("1988/01/02"),
                     IsActive=true,
                     CreateTime= DateTime.Now,
                     LastModificationTime=null,
@@ -43,8 +44,10 @@ namespace Mc2.CrudTest.UnitTest.Mocks
                 }
             };
             var mockRepo = new Mock<ICustomerRepository>();
+            var mockContextTransaction = new Mock<IDbContextTransaction>();
 
             mockRepo.Setup(r => r.GetAll()).ReturnsAsync(customers);
+
             mockRepo.Setup(r => r.Get(It.IsAny<int>()))
                 .Returns((int id) => Task.FromResult(customers.FirstOrDefault(e => e.Id == id)));
 
@@ -66,6 +69,7 @@ namespace Mc2.CrudTest.UnitTest.Mocks
                     customer.IsActive = existingEntity.IsActive;
                 }
             });
+            mockRepo.Setup(r => r.BeginTransaction()).ReturnsAsync(mockContextTransaction.Object);
             return mockRepo;
 
         }

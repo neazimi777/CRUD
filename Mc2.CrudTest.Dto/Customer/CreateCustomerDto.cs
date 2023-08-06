@@ -2,5 +2,6 @@
 {
     public class CreateCustomerDto: BaseCustomerDto
     {
+        public string BankAccountNumber { get; set; } = string.Empty;
     }
 }

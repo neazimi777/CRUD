@@ -1,8 +1,14 @@
-﻿using Mc2.CrudTest.Domain;
+﻿using AutoMapper;
+using Mc2.CrudTest.Domain;
+using Mc2.CrudTest.Domain.Repositories;
+using Mc2.CrudTest.DomainService;
 using Mc2.CrudTest.DomainService.Customer.Handlers.Commands;
 using Mc2.CrudTest.DomainService.Customer.Requests.Commands;
 using Mc2.CrudTest.Dto;
 using Mc2.CrudTest.Dto.Customer;
+using Mc2.CrudTest.UnitTest.Mocks;
+using MediatR;
+using Moq;
 using TechTalk.SpecFlow;
 
 namespace Mc2.CrudTest.BehaviourTest.Steps
@@ -13,10 +19,21 @@ namespace Mc2.CrudTest.BehaviourTest.Steps
         private readonly CreateCustomerRequestHandler _handler;
         private CreateCustomerDto _reques;
         private BaseCommandResponse _response;
+        private readonly Mock<IMediator> _mediator;
+        private readonly Mock<ICustomerRepository> _mockCustomer;
+        private readonly IMapper _mapper;
 
         public CreateCustomerSteps()
         {
+            var mapperConfig = new MapperConfiguration(c =>
+            {
+                c.AddProfile<MappingProfile>();
+            });
+            _mediator = new Mock<IMediator>();
+            _mapper = mapperConfig.CreateMapper();
+            _mockCustomer = MockCustomerRepository.CustomerRepository();
 
+            _handler = new CreateCustomerRequestHandler(_mockCustomer.Object, _mapper, _mediator.Object);
         }
 
         [Given("a valid customer request")]
@@ -27,7 +44,7 @@ namespace Mc2.CrudTest.BehaviourTest.Steps
                 FirstName = "Ali",
                 LastName = "esfandiyar",
                 Email = "Ali@gmail.com",
-                PhoneNumber = "09125698189",
+                PhoneNumber = "+989123456710",
                 BankAccountNumber = "12345678",
                 DateOfBirth = "1998/01/02",
 

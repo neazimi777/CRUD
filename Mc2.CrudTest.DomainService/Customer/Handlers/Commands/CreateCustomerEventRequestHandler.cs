@@ -18,8 +18,10 @@ namespace Mc2.CrudTest.DomainService.Customer.Handlers.Commands
         public async Task Handle(CreateCustomerEventRequest notification, CancellationToken cancellationToken)
         {
             var customerEvent = _mapper.Map<CustomerEvent>(notification.createCustomerEventDto);
+            customerEvent.DateOfBirth = DateTime.Parse(notification.createCustomerEventDto.DateOfBirth);
             await _customerEventRepository.Add(customerEvent);
             await _customerEventRepository.SaveAsync();
+
         }
     }
 }

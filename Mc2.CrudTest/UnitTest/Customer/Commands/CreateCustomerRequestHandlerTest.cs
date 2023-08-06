@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Mc2.CrudTest.Domain.Exceptions;
 using Mc2.CrudTest.Domain.Repositories;
 using Mc2.CrudTest.DomainService;
 using Mc2.CrudTest.DomainService.Customer.Handlers.Commands;
@@ -8,8 +9,9 @@ using Mc2.CrudTest.UnitTest.Mocks;
 using MediatR;
 using Moq;
 using Shouldly;
+using System;
 
-namespace Mc2.CrudTest.Customer.Commands
+namespace Mc2.CrudTest.Test.UnitTest.Customer.Commands
 {
     public class CreateCustomerRequestHandlerTest
     {
@@ -17,14 +19,14 @@ namespace Mc2.CrudTest.Customer.Commands
         private readonly CreateCustomerDto _CustomerDto;
         private readonly Mock<ICustomerRepository> _mockCustomer;
         private readonly CreateCustomerRequestHandler _handler;
-        private readonly Mock<IMediator> _mediator ;
+        private readonly Mock<IMediator> _mediator;
         public CreateCustomerRequestHandlerTest()
         {
             var mapperConfig = new MapperConfiguration(c =>
             {
                 c.AddProfile<MappingProfile>();
             });
-            _mediator  = new Mock<IMediator>(); ;
+            _mediator = new Mock<IMediator>();
             _mapper = mapperConfig.CreateMapper();
             _mockCustomer = MockCustomerRepository.CustomerRepository();
             _handler = new CreateCustomerRequestHandler(_mockCustomer.Object, _mapper, _mediator.Object);
@@ -35,8 +37,8 @@ namespace Mc2.CrudTest.Customer.Commands
                 LastName = "TestLastName",
                 Email = "Test@gmail.com",
                 BankAccountNumber = "45679945",
-                DateOfBirth = DateOnly.Parse("1988/01/02"),
-                PhoneNumber = "09365155588"
+                DateOfBirth = "1988/01/02",
+                PhoneNumber = "+989123456789"
             };
         }
 
@@ -60,11 +62,7 @@ namespace Mc2.CrudTest.Customer.Commands
 
             var result = await _handler.Handle(new DomainService.Customer.Requests.Commands.CreateCustomerRequest(_CustomerDto), CancellationToken.None);
 
-            var customers = await _mockCustomer.Object.GetAll();
-
-            customers.Count.ShouldBe(2);
-            result.ShouldBeOfType<BaseCommandResponse>();
-
+            result.Success.ShouldBeFalse();
         }
     }
 }

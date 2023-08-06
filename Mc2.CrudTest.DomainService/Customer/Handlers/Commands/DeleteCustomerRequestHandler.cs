@@ -45,7 +45,7 @@ namespace Mc2.CrudTest.DomainService.Customer.Handlers.Commands
                 {
                     FirstName = customer.FirstName,
                     LastName = customer.LastName,
-                    DateOfBirth = customer.DateOfBirth,
+                    DateOfBirth = customer.DateOfBirth.ToString(),
                     Email = customer.Email,
                     PhoneNumber = customer.PhoneNumber,
                     BankAccountNumber = customer.BankAccountNumber,

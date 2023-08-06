@@ -13,14 +13,21 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<CreateCustomerDto, Domain.CustomerEvent>()
+        CreateMap<CreateCustomerDto, Domain.Customer>()
+           .ForMember(x => x.DateOfBirth, opt => opt.Ignore())
             .ReverseMap();
 
-        CreateMap<UpdateCustomerDto, Domain.CustomerEvent>()
+        CreateMap<UpdateCustomerDto, Domain.Customer>()
+             .ForMember(x => x.DateOfBirth, opt => opt.Ignore())
           .ReverseMap();
 
-        CreateMap<GetCustomerDto, Domain.CustomerEvent>()
+        CreateMap<GetCustomerDto, Domain.Customer>()
+            .ForMember(x => x.DateOfBirth, opt => opt.Ignore())
         .ReverseMap();
+
+        CreateMap<CreateCustomerEventDto, Domain.CustomerEvent>()
+             .ForMember(x => x.DateOfBirth, opt => opt.Ignore())
+            .ReverseMap();
 
     }
 

@@ -9,25 +9,24 @@ using MediatR;
 using Moq;
 using Shouldly;
 
-namespace Mc2.CrudTest.UnitTest.Customer.Commands
+namespace Mc2.CrudTest.Test.UnitTest.Customer.Commands
 {
     public class DeleteCustomerRequestHandlerTest
     {
         private readonly IMapper _mapper;
-        private readonly UpdateCustomerDto _CustomerDto;
         private readonly Mock<ICustomerRepository> _mockCustomer;
         private readonly DeleteCustomerRequestHandler _handler;
-        private readonly IMediator _mediator;
-        public DeleteCustomerRequestHandlerTest(IMediator mediator)
+        private readonly Mock<IMediator> _mediator;
+        public DeleteCustomerRequestHandlerTest()
         {
             var mapperConfig = new MapperConfiguration(c =>
             {
                 c.AddProfile<MappingProfile>();
             });
-            _mediator = mediator;
+            _mediator = new Mock<IMediator>();
             _mapper = mapperConfig.CreateMapper();
             _mockCustomer = MockCustomerRepository.CustomerRepository();
-            _handler = new DeleteCustomerRequestHandler(_mockCustomer.Object, _mapper, _mediator);
+            _handler = new DeleteCustomerRequestHandler(_mockCustomer.Object, _mapper, _mediator.Object);
 
         }
         [Fact]
